@@ -13,5 +13,32 @@ resource "azurerm_public_ip" "pip" {
   ip_version          = var.ip_version
   sku                 = var.sku
   sku_tier            = var.sku_tier
-  zones               = var.zones
+
+  # Apply conditional logic to the application of the ZONES attribute.
+  zones               = try(var.zones, []) == null ? [] :  alltrue(try([for z in var.zones : z == "1" || z == "2" || z == "3" || z == ""],["0"])) == true ? var.zones : ["1", "2", "3"]
+  
 }
+
+/*
+  ZONES COMMENTS
+  CODE: try(var.zones, []) == null ? [] :  alltrue(try([for z in var.zones : z == "1" || z == "2" || z == "3" || z == ""],["0"])) == true ? var.zones : ["1", "2", "3"]
+  
+  Example:
+  var.zones=null
+    try(null, []) == null ? [] :  alltrue(try([for z in null : z == "1" || z == "2" || z == "3" || z == ""],["0"])) == true ? null : ["1", "2", "3"]
+  result=[]  EXPECTED
+
+  var.zones="null"
+    try("null", []) == null ? [] :  alltrue(try([for z in "null" : z == "1" || z == "2" || z == "3" || z == ""],["0"])) == true ? "null" : ["1", "2", "3"]
+  result=["1", "2", "3"]  EXPECTED
+
+  var.zones=["1"]
+    try([1], []) == null ? [] :  alltrue(try([for z in [1] : z == "1" || z == "2" || z == "3" || z == ""],["0"])) == true ? [1] : ["1", "2", "3"]
+  result=[1]  EXPECTED
+  #NOTE terraform uses un-quoted strings as map-identifiers, unquoted integers are written in as their STRING values.
+
+  var.zones=["1","2"] 
+    try(["1","2"], []) == null ? [] :  alltrue(try([for z in ["1","2"] : z == "1" || z == "2" || z == "3" || z == ""],["0"])) == true ? [1] : ["1", "2", "3"]
+  result=[1]  EXPECTED
+
+*/
