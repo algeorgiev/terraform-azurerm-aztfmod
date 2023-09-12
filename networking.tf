@@ -214,7 +214,7 @@ resource "azurerm_virtual_network_peering" "peering" {
   name                         = azurecaf_name.peering[each.key].result
   virtual_network_name         = can(each.value.from.virtual_network_name) ? each.value.from.virtual_network_name : local.combined_objects_networking[try(each.value.from.lz_key, local.client_config.landingzone_key)][each.value.from.vnet_key].name
   resource_group_name          = can(each.value.from.resource_group_name) ? each.value.from.resource_group_name : local.combined_objects_networking[try(each.value.from.lz_key, local.client_config.landingzone_key)][each.value.from.vnet_key].resource_group_name
-  remote_virtual_network_id    = can(each.value.to.remote_virtual_network_id) ? each.value.to.remote_virtual_network_id : local.combined_objects_networking[try(each.value.to.lz_key, local.client_config.landingzone_key)][each.value.to.vnet_key].id
+  remote_virtual_network_id    = can(each.value.to.remote_virtual_network_id) || can(each.value.to.id) ? try(each.value.to.remote_virtual_network_id, each.value.to.id) : local.combined_objects_networking[try(each.value.to.lz_key, local.client_config.landingzone_key)][each.value.to.vnet_key].id
   allow_virtual_network_access = try(each.value.allow_virtual_network_access, true)
   allow_forwarded_traffic      = try(each.value.allow_forwarded_traffic, false)
   allow_gateway_transit        = try(each.value.allow_gateway_transit, false)
