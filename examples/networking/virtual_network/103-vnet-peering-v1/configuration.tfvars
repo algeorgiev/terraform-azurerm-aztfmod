@@ -448,7 +448,7 @@ vnet_peerings_v1 = {
   }
 
 
-  # to peer with a vnet in a different subscription you can reference the id in from or to
+  # to peer with a vnet in a different subscription you can reference the attribute `id` in `from` map
   # or use vnet_key and lz_key
   #
   # uncomment and adjust the following example for cross subscripiton vnet peering
@@ -456,10 +456,10 @@ vnet_peerings_v1 = {
   # test_TO_hub_re1 = {
   #   name = "test_TO_hub_re1"
   #   from = {
-  #     id = "/subscriptions/xxxxxxxxxxxx/resourceGroups/vnet/providers/Microsoft.Network/virtualNetworks/vnet1"
+  #     vnet_key = "hub_re1"
   #   }
   #   to = {
-  #     vnet_key = "hub_re1"
+  #     id = "/subscriptions/xxxxxxxxxxxx/resourceGroups/vnet/providers/Microsoft.Network/virtualNetworks/vnet1"
   #   }
   #   allow_virtual_network_access = true
   #   allow_forwarded_traffic      = false
