@@ -448,7 +448,7 @@ vnet_peerings_v1 = {
   }
 
 
-  # to peer with a vnet in a different subscription you can reference the attribute `id` in `from` map
+  # to peer with a vnet in a different subscription you can reference the attribute `id` in from map only
   # or use vnet_key and lz_key
   #
   # uncomment and adjust the following example for cross subscripiton vnet peering
