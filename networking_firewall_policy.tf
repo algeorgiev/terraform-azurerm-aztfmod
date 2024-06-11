@@ -3,12 +3,14 @@ module "azurerm_firewall_policies" {
   source = "./modules/networking/firewall_policies"
   for_each = {
     for key, value in local.networking.azurerm_firewall_policies : key => value
-    if try(value.base_policy, null) == null
+    # if try(value.base_policy, null) == null
   }
 
   global_settings = local.global_settings
   settings        = each.value
   tags            = try(each.value.tags, null)
+
+  base_policy_id = can(each.value.base_policy.id) ? each.value.base_policy.id : local.combined_objects_azurerm_firewall_policies[try(each.value.base_policy.lz_key, local.client_config.landingzone_key)][each.value.base_policy.key].id
 
   resource_group = can(each.value.resource_group.id) ? each.value.resource_group.id : local.combined_objects_resource_groups[try(each.value.resource_group.lz_key, each.value.lz_key, local.client_config.landingzone_key)][try(each.value.resource_group_key, each.value.resource_group.key)]
 }
